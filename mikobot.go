@@ -21,12 +21,32 @@ type Flags struct {
 	config_path	*string
 }
 
-type Message struct {
+type Config struct {
 	Debug		bool
 	Meowchannel	string
 	Nick		string
 	Server		string
 	Tls		bool
+}
+
+func add_callbacks(irc *ircevent.Connection, meowchan string) {
+	irc.AddConnectCallback(func(e ircmsg.Message) {
+		if botMode := irc.ISupport()["BOT"]; botMode != "" {
+			irc.Send("MODE", irc.CurrentNick(), "+"+botMode)
+		}
+
+		irc.Join(meowchan)
+	})
+
+	irc.AddCallback("PRIVMSG", func(e ircmsg.Message) {
+		pleading_tomato_emoji(*irc, e)
+	})
+
+	irc.AddCallback("PING", func(e ircmsg.Message) {
+		if numgen(0, 1) == 0 {
+			irc.Privmsg(meowchan, "meow")
+		}
+	})
 }
 
 func numgen(min int, max int) int64 {
@@ -98,38 +118,22 @@ func to_char(i int) string {
 
 func main() {
 	flags := parse_flags()
-	conf, err := os.ReadFile(*flags.config_path)
-	var m Message
-	err = json.Unmarshal(conf, &m)
+	config_json, err := os.ReadFile(*flags.config_path)
+	var config Config
+	err = json.Unmarshal(config_json, &config)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	irc := ircevent.Connection{
-		Server:	m.Server,
-		Nick:	m.Nick,
-		Debug:	m.Debug,
-		UseTLS:	m.Tls,
+		Server:	config.Server,
+		Nick:	config.Nick,
+		Debug:	config.Debug,
+		UseTLS:	config.Tls,
 	}
 
-	irc.AddConnectCallback(func(e ircmsg.Message) {
-		if botMode := irc.ISupport()["BOT"]; botMode != "" {
-			irc.Send("MODE", irc.CurrentNick(), "+"+botMode)
-		}
-
-		irc.Join(m.Meowchannel)
-	})
-
-	irc.AddCallback("PRIVMSG", func(e ircmsg.Message) {
-		pleading_tomato_emoji(irc, e)
-	})
-
-	irc.AddCallback("PING", func(e ircmsg.Message) {
-		if numgen(0, 1) == 0 {
-			irc.Privmsg(m.Meowchannel, "meow")
-		}
-	})
+	add_callbacks(&irc, config.Meowchannel)
 
 	err = irc.Connect()
 	if err != nil {
