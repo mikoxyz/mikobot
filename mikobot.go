@@ -24,6 +24,8 @@ type Flags struct {
 type Config struct {
 	Debug       bool
 	Meowchannel string
+	Meowlow     int64
+	Meowhigh    int64
 	Nick        string
 	Server      string
 	Tls         bool
@@ -43,7 +45,7 @@ func add_callbacks(irc *ircevent.Connection, config *Config) {
 	})
 
 	irc.AddCallback("PING", func(e ircmsg.Message) {
-		if numgen(0, 1) == 0 {
+		if numgen(config.Meowlow, config.Meowhigh) == config.Meowlow {
 			irc.Privmsg(config.Meowchannel, "meow")
 		}
 	})

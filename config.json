@@ -1,6 +1,8 @@
 {
 	"Debug":	true,
 	"Meowchannel":	"#gay",
+	"Meowlow":	1,
+	"Meowhigh":	100,
 	"Nick":		"mikobot",
 	"Server":	"myxoz.port0.org:6697",
 	"Tls":		true
