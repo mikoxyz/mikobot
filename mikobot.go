@@ -49,15 +49,13 @@ func add_callbacks(irc *ircevent.Connection, meowchan string) {
 	})
 }
 
-func numgen(min int, max int) int64 {
-	min_int64 := int64(min)
-	max_int64 := int64(max)
-	bigint, err := rand.Int(rand.Reader, big.NewInt(max_int64-min_int64))
+func numgen(min int64, max int64) int64 {
+	bigint, err := rand.Int(rand.Reader, big.NewInt(max-min))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return bigint.Int64() + min_int64
+	return bigint.Int64() + min
 }
 
 func pleading_tomato_emoji(irc ircevent.Connection, e ircmsg.Message) {
