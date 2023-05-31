@@ -50,6 +50,11 @@ func add_callbacks(irc *ircevent.Connection, meowchan string) {
 }
 
 func numgen(min int64, max int64) int64 {
+	if max-min <= 0 {
+		log.Print("max-min <= 0, returning min")
+		return min
+	}
+
 	bigint, err := rand.Int(rand.Reader, big.NewInt(max-min))
 	if err != nil {
 		log.Fatal(err)
