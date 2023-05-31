@@ -18,15 +18,15 @@ import (
 )
 
 type Flags struct {
-	config_path	*string
+	config_path *string
 }
 
 type Config struct {
-	Debug		bool
-	Meowchannel	string
-	Nick		string
-	Server		string
-	Tls		bool
+	Debug       bool
+	Meowchannel string
+	Nick        string
+	Server      string
+	Tls         bool
 }
 
 func add_callbacks(irc *ircevent.Connection, meowchan string) {
@@ -57,13 +57,13 @@ func numgen(min int, max int) int64 {
 		log.Fatal(err)
 	}
 
-	return bigint.Int64()+min_int64
+	return bigint.Int64() + min_int64
 }
 
 func pleading_tomato_emoji(irc ircevent.Connection, e ircmsg.Message) {
 	text := e.Params[1]
 
-	if text == "\001ACTION pats " + irc.CurrentNick() + "\001" {
+	if text == "\001ACTION pats "+irc.CurrentNick()+"\001" {
 		irc.Privmsg(e.Params[0], prr())
 	}
 
@@ -85,7 +85,7 @@ func not_cute() string {
 
 func parse_flags() Flags {
 	flags := Flags{
-		config_path:	flag.String("c", "/etc/mikobot/config.json", "path to config dir"),
+		config_path: flag.String("c", "/etc/mikobot/config.json", "path to config dir"),
 	}
 
 	flag.Parse()
@@ -113,7 +113,7 @@ func prr() string {
 }
 
 func to_char(i int) string {
-	return string(32+i)
+	return string(32 + i)
 }
 
 func main() {
@@ -127,10 +127,10 @@ func main() {
 	}
 
 	irc := ircevent.Connection{
-		Server:	config.Server,
-		Nick:	config.Nick,
-		Debug:	config.Debug,
-		UseTLS:	config.Tls,
+		Server: config.Server,
+		Nick:   config.Nick,
+		Debug:  config.Debug,
+		UseTLS: config.Tls,
 	}
 
 	add_callbacks(&irc, config.Meowchannel)
