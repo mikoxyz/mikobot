@@ -29,13 +29,13 @@ type Config struct {
 	Tls         bool
 }
 
-func add_callbacks(irc *ircevent.Connection, meowchan string) {
+func add_callbacks(irc *ircevent.Connection, config *Config) {
 	irc.AddConnectCallback(func(e ircmsg.Message) {
 		if botMode := irc.ISupport()["BOT"]; botMode != "" {
 			irc.Send("MODE", irc.CurrentNick(), "+"+botMode)
 		}
 
-		irc.Join(meowchan)
+		irc.Join(config.Meowchannel)
 	})
 
 	irc.AddCallback("PRIVMSG", func(e ircmsg.Message) {
@@ -44,7 +44,7 @@ func add_callbacks(irc *ircevent.Connection, meowchan string) {
 
 	irc.AddCallback("PING", func(e ircmsg.Message) {
 		if numgen(0, 1) == 0 {
-			irc.Privmsg(meowchan, "meow")
+			irc.Privmsg(config.Meowchannel, "meow")
 		}
 	})
 }
@@ -136,7 +136,7 @@ func main() {
 		UseTLS: config.Tls,
 	}
 
-	add_callbacks(&irc, config.Meowchannel)
+	add_callbacks(&irc, &config)
 
 	err = irc.Connect()
 	if err != nil {
