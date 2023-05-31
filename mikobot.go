@@ -26,6 +26,7 @@ type Config struct {
 	Meowchannel string
 	Meowlow     int64
 	Meowhigh    int64
+	Meowreply   bool
 	Nick        string
 	Server      string
 	Tls         bool
@@ -41,7 +42,7 @@ func add_callbacks(irc *ircevent.Connection, config *Config) {
 	})
 
 	irc.AddCallback("PRIVMSG", func(e ircmsg.Message) {
-		pleading_tomato_emoji(*irc, e)
+		pleading_tomato_emoji(*irc, e, *config)
 	})
 
 	irc.AddCallback("PING", func(e ircmsg.Message) {
@@ -65,7 +66,7 @@ func numgen(min int64, max int64) int64 {
 	return bigint.Int64() + min
 }
 
-func pleading_tomato_emoji(irc ircevent.Connection, e ircmsg.Message) {
+func pleading_tomato_emoji(irc ircevent.Connection, e ircmsg.Message, config Config) {
 	text := e.Params[1]
 
 	if text == "\001ACTION pats "+irc.CurrentNick()+"\001" {
@@ -74,6 +75,12 @@ func pleading_tomato_emoji(irc ircevent.Connection, e ircmsg.Message) {
 
 	if strings.Contains(text, "mikobot cute") {
 		irc.Privmsg(e.Params[0], not_cute())
+	}
+
+	if config.Meowreply == true {
+		if strings.Contains(text, "meow") {
+			irc.Privmsg(e.Params[0], "meow")
+		}
 	}
 }
 
