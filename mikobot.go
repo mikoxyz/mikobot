@@ -69,8 +69,7 @@ func numgen(min int64, max int64) int64 {
 func pleading_tomato_emoji(irc ircevent.Connection, e ircmsg.Message, config Config) {
 	text := strings.ToLower(e.Params[1])
 
-	/* capitalization matters here, so we use the unaltered message string from e */
-	if e.Params[1] == "\001ACTION pats "+irc.CurrentNick()+"\001" {
+	if strings.Contains(text, "\001action pats "+irc.CurrentNick()) {
 		irc.Privmsg(e.Params[0], prr())
 	}
 
