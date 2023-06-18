@@ -109,11 +109,7 @@ func parse_flags() Flags {
 
 func prr() string {
 	msg_len := numgen(6, 18)
-
-	prrlet := make([]string, 3)
-	prrlet[0] = "p"
-	prrlet[1] = "r"
-	prrlet[2] = "r"
+	prrlet := [3]string{"p", "r", "r"}
 
 	msg := "pr"
 	for i := 0; int64(i) < msg_len; i++ {
