@@ -22,6 +22,7 @@ type Flags struct {
 }
 
 type Config struct {
+	Channels    []string
 	Debug       bool
 	Meowchannel string
 	Meowlow     int64
@@ -38,7 +39,9 @@ func add_callbacks(irc *ircevent.Connection, config *Config) {
 			irc.Send("MODE", irc.CurrentNick(), "+"+botMode)
 		}
 
-		irc.Join(config.Meowchannel)
+		for _, channel := range config.Channels {
+			irc.Join(channel)
+		}
 	})
 
 	irc.AddCallback("PRIVMSG", func(e ircmsg.Message) {
