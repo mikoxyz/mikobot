@@ -76,12 +76,12 @@ func pleading_tomato_emoji(irc ircevent.Connection, e ircmsg.Message, config Con
 		irc.Privmsg(e.Params[0], prr())
 	}
 
-	if strings.Contains(text, "mikobot cute") {
+	if strings.Contains(text, irc.CurrentNick()+"cute") {
 		irc.Privmsg(e.Params[0], not_cute())
 	}
 
 	if config.Meowreply == true {
-		if strings.Contains(text, "meow") {
+		if strings.Contains(text, "meow") || strings.Contains(text, irc.CurrentNick()) {
 			irc.Privmsg(e.Params[0], "meow")
 		}
 	}
